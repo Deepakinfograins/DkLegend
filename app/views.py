@@ -23,13 +23,13 @@ class ProductView(View):
         mobile=Product.objects.filter(categary='M')
         laptop=Product.objects.filter(categary='L')
          
-        return render(request,'app/home.html',{'topwear':topwear,'bottomwear':bottomwear,'mobile':mobile,'laptop':laptop})
+        return render(request,'home.html',{'topwear':topwear,'bottomwear':bottomwear,'mobile':mobile,'laptop':laptop})
 
 class ProductDetailView(View):
     def get(self,request,id):
         product=Product.objects.get(id=id)
 
-        return render(request, 'app/productdetail.html',{'product':product})
+        return render(request, 'productdetail.html',{'product':product})
 
 class MobileView(View):
     def get(self, request,data=None):
@@ -43,7 +43,7 @@ class MobileView(View):
 
         elif data =='above':
             mobile=Product.objects.filter(categary="M").filter(selling_price__gte='10000')
-        return render(request, 'app/mobile.html', {'mobile':mobile})
+        return render(request, 'mobile.html', {'mobile':mobile})
 
 class LaptopView(View):
        def get(self, request,data=None):
@@ -57,7 +57,7 @@ class LaptopView(View):
 
         elif data =='above':
             laptop=Product.objects.filter(categary="L").filter(selling_price__gte='20000')
-        return render(request, 'app/laptop.html', {'laptop':laptop})
+        return render(request, 'laptop.html', {'laptop':laptop})
 
 class TopwearView(View):
      def get(self, request,data=None):
@@ -69,7 +69,7 @@ class TopwearView(View):
 
         elif data =='above':
             topwear=Product.objects.filter(categary="TW").filter(selling_price__gte='500')
-        return render(request, 'app/topwear.html', {'topwear':topwear})
+        return render(request, 'topwear.html', {'topwear':topwear})
 
 
 
@@ -83,7 +83,7 @@ class BottomView(View):
 
         elif data =='above':
             bottomwear=Product.objects.filter(categary="BW").filter(selling_price__gte='500')
-        return render(request, 'app/bottomwear.html', {'bottomwear':bottomwear})
+        return render(request, 'bottomwear.html', {'bottomwear':bottomwear})
 
 
 class AddToCartView(View):
@@ -111,9 +111,9 @@ class ShowCartView(View):
                     amount += temamount
                     totalamount=amount+shipping_amount
 
-                return render(request,'app/addtocart.html',{'carts':carts,'totalamount':totalamount,'amount':amount})
+                return render(request,'addtocart.html',{'carts':carts,'totalamount':totalamount,'amount':amount})
             else:
-                return render(request,'app/emptycart.html')
+                return render(request,'emptycart.html')
 
 
 class PlusCartView(View):
@@ -194,13 +194,13 @@ class RemoveCartView(View):
 
 
 def buy_now(request):
-    return render(request, 'app/buynow.html')
+    return render(request, 'buynow.html')
 
 
 class ProfileView(View):
     def get(self, request):
 
-        return render(request, 'app/profile.html')
+        return render(request, 'profile.html')
     def post(self,request):
         if request.method == 'POST':
             get_user=request.user
@@ -215,17 +215,17 @@ class ProfileView(View):
 
             context = {'message' : 'Congratulations!! Profile Updated Successfully' , 'class' : 'success', 'active':'btn-primary'}
             
-        return render(request, 'app/profile.html' ,context)
+        return render(request, 'profile.html' ,context)
 class AddressView(View):
      def get(self, request):
         address=Customer.objects.filter(user=request.user)
-        return render(request, 'app/address.html',{'address':address , 'active':'btn-primary'})
+        return render(request, 'address.html',{'address':address , 'active':'btn-primary'})
 
 def orders(request):
- return render(request, 'app/orders.html')
+ return render(request, 'orders.html')
 
 def change_password(request):
- return render(request, 'app/changepassword.html')
+ return render(request, 'changepassword.html')
 
 
 
@@ -274,7 +274,7 @@ def login_attempt(request):
         MessageHandler(mobile, otp).send_otp()
         request.session['mobile'] = mobile
         return redirect('login_otp')        
-    return render(request,'app/login.html')
+    return render(request,'login.html')
 
 
 def login_otp(request):
@@ -292,9 +292,9 @@ def login_otp(request):
             return redirect('profile')
         else:
             context = {'message' : 'Wrong OTP' , 'class' : 'danger','mobile':mobile }
-            return render(request,'app/login_otp.html' , context)
+            return render(request,'login_otp.html' , context)
     
-    return render(request,'app/login_otp.html' , context)
+    return render(request,'login_otp.html' , context)
     
     
 
@@ -311,7 +311,7 @@ def register(request):
         
         if check_user or check_profile:
             context = {'message' : 'User already exists' , 'class' : 'danger' }
-            return render(request,'app/register.html' , context)
+            return render(request,'register.html' , context)
         
         user = User(email = email , username = username)
         user.save()
@@ -322,7 +322,7 @@ def register(request):
         MessageHandler(mobile, otp).send_otp()
         request.session['mobile'] = mobile
         return redirect('otp')
-    return render(request,'app/register.html')
+    return render(request,'register.html')
 
 
 
@@ -335,15 +335,15 @@ def otp(request):
         
         if otp == profile.otp:
             context = {'message' : 'Congratulations!! Registered Successfully' , 'class' : 'success','mobile':mobile }
-            return render(request,'app/register.html' , context)
+            return render(request,'register.html' , context)
         else:
             print('Wrong')
             
             context = {'message' : 'Wrong OTP' , 'class' : 'danger','mobile':mobile }
-            return render(request,'app/otp.html' , context)
+            return render(request,'otp.html' , context)
             
         
-    return render(request,'app/otp.html' , context)
+    return render(request,'otp.html' , context)
 
 
 def logout_request(request):
@@ -352,7 +352,7 @@ def logout_request(request):
 	return redirect("home")
 
 def checkout(request):
-    return render(request, 'app/checkout.html')
+    return render(request, 'checkout.html')
 
 
 # def faltu_function(request):
